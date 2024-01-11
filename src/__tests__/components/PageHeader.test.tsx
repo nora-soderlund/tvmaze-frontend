@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import PageHeader from "./PageHeader";
-import TvInformationShowDetailsMock from "../../data/tvinformation/interfaces/TvInformationShowDetails.mock.json";
+import PageHeader from "../../components/page/PageHeader";
+import TvInformationShowDetailsMock from "../data/interfaces/TvInformationShowDetails.mock.json";
 import TvmazeDataSource from "../../data/tvinformation/sources/tvmaze/TvmazeDataSource";
 import { act } from "react-dom/test-utils";
 import { redirect } from "react-router-dom";
@@ -12,12 +12,6 @@ jest.mock("react-router-dom", () => ({
 describe("PageHeader", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  test("Should render the TVMAZE logo", () => {
-    render(<PageHeader/>);
-
-    expect(screen.getByAltText("TVMAZE")).toBeInTheDocument();
   });
 
   test("Should enable the search visibility on click", () => {

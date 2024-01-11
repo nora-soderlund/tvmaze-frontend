@@ -1,7 +1,7 @@
-import TvInformationError from "../../interfaces/TvInformationError";
-import TvmazeDataSource from "./TvmazeDataSource";
-import TvmazeSearchResultMock from "./interfaces/TvmazeSearchResult.mock.json";
-import TvInformationShowDetailsMock from "../../interfaces/TvInformationShowDetails.mock.json";
+import TvInformationError from "../../../data/tvinformation/interfaces/TvInformationError";
+import TvmazeDataSource from "../../../data/tvinformation/sources/tvmaze/TvmazeDataSource";
+import TvmazeSearchResultMock from "../../../data/tvinformation/sources/tvmaze/interfaces/TvmazeSearchResult.mock.json";
+import TvInformationShowDetailsMock from "../interfaces/TvInformationShowDetails.mock.json";
 
 export function mockFetchResponse(ok: boolean, body: unknown) {
   jest.spyOn(globalThis, "fetch").mockResolvedValueOnce({
