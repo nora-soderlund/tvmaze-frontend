@@ -12,7 +12,7 @@ export default class TvmazeDataSource implements TvInformationDataSource {
    * Fetches the show details from the TVMAZE API via a TVMAZE show id.
    */
   public async getShow(showId: number, abortSignal?: AbortSignal): Promise<TvInformationShowDetails> {
-    const url = new URL(`/shows/${showId}`, "https://api.tvmaze.com/");
+    const url = new URL(`/shows/${showId}`, this.baseUrl);
 
     const result = await this.getRequest<Show>(url, abortSignal);
 
@@ -23,7 +23,7 @@ export default class TvmazeDataSource implements TvInformationDataSource {
    * Fetches a list of shows by the query from the TVMAZE API.
    */
   public async getShowsByQuery(query: string, abortSignal?: AbortSignal): Promise<TvInformationShowDetails[]> {
-    const url = new URL("/search/shows", "https://api.tvmaze.com/");
+    const url = new URL("/search/shows", this.baseUrl);
 
     url.searchParams.set("q", query);
 
@@ -33,7 +33,7 @@ export default class TvmazeDataSource implements TvInformationDataSource {
   }
 
   private async getRequest<Result>(url: URL, abortSignal?: AbortSignal): Promise<Result> {  
-    const response = await fetch(url, {
+    const response = await fetch(url.toString(), {
       method: "GET",
       headers: {
         "Accept": "application/json"
