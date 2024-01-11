@@ -10,6 +10,7 @@ import { tvmazeDataSource } from "../../data/tvinformation";
 import TvInformationShowDetails from "../../data/tvinformation/interfaces/TvInformationShowDetails";
 import useDynamicChange from "../../hooks/useDynamicChange";
 import ShowThumbnail from "../shows/ShowThumbnail";
+import { redirect } from "react-router-dom";
 
 type PageHeaderProps = {
   children?: ReactNode;
@@ -40,14 +41,14 @@ export default function PageHeader({ children }: PageHeaderProps) {
   return (
     <Fragment>
       <PageContainer>
-        <header className={(searchVisible)?("page-header-transitioned"):(undefined)}>
+        <header className={(searchVisible)?("page-header-transitioned"):(undefined)} data-testid="header">
           <div className="page-header-section">
             <a href="/" title="Go to the home page">
-              <img className="page-header-logo" src={tvmazeLogo}/>
+              <img className="page-header-logo" alt="TVMAZE" src={tvmazeLogo}/>
             </a>
 
             <div className="page-header-icons">
-              <IconButton onClick={() => setSearchVisible(!searchVisible)}>
+              <IconButton data-testid="icon-magnifying-glass" onClick={() => setSearchVisible(!searchVisible)}>
                 <FontAwesomeIcon icon={faMagnifyingGlass} fontSize={"2em"}/>
               </IconButton>
             </div>
@@ -56,32 +57,36 @@ export default function PageHeader({ children }: PageHeaderProps) {
           <div className="page-header-section page-header-search">
             <FontAwesomeIcon icon={faMagnifyingGlass} fontSize={"1.5em"}/>
 
-            <Input placeholder="Search for a show..." onChange={useDynamicChange((event) => setSearchQuery((event.target as HTMLInputElement).value))}/>
+            <Input placeholder="Search for a show..." onChange={useDynamicChange((event) => setSearchQuery((event.target as HTMLInputElement).value))} data-testid="input"/>
 
-            <IconButton onClick={() => setSearchVisible(!searchVisible)}>
+            <IconButton data-testid="icon-times" onClick={() => setSearchVisible(!searchVisible)}>
               <FontAwesomeIcon icon={faTimes} fontSize={"2em"}/>
             </IconButton>
           </div>
         </header>
 
-        {(searchVisible && searchResults !== null) && (
-          <Fragment>
-            <h2>Search results</h2>
+        {(searchVisible) && (
+          (searchResults !== null)?(
+            <Fragment>
+              <h2>Search results</h2>
 
-            <div style={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              gap: "1em"
-            }}>
-              {searchResults.map((showDetails) => (
-                <ShowThumbnail key={showDetails.id} showDetails={showDetails} onClick={() => {
-                  window.location.href = `/shows/${showDetails.id}`;
-                }}/>
-              ))}
-            </div>
-          </Fragment>
+              <div style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                gap: "1em"
+              }}>
+                {searchResults.map((showDetails) => (
+                  <ShowThumbnail key={showDetails.id} showDetails={showDetails} onClick={() => redirect(`/shows/${showDetails.id}`)} data-testid="show-thumbnail"/>
+                ))}
+              </div>
+            </Fragment>
+          ):(
+            (searchAbortController) && (
+              <h2 data-testid="loading">Loading</h2>
+            )
+          )
         )}
       </PageContainer>
 
