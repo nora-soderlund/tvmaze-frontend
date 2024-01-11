@@ -1,0 +1,10 @@
+.icon-button {
+  background: none;
+  border: none;
+
+  color: var(--color);
+
+  cursor: pointer;
+  
+  aspect-ratio: 1;
+}

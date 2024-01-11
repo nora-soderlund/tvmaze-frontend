@@ -1,0 +1,41 @@
+.page-header-section {
+  height: 3em;
+
+  display: flex;
+  gap: 1em;
+  flex-direction: row;
+
+  align-items: center;
+
+  transition: transform 250ms ease-in-out;
+}
+
+.page-header-transitioned > .page-header-section:nth-child(1) {
+  transform: translateY(-50%) rotateX(90deg);
+}
+
+.page-header-transitioned > .page-header-section:nth-child(2) {
+  transform: translateY(-100%) rotateX(0deg);
+}
+
+.page-header-section:nth-child(2) {
+  transform: translateY(-50%) rotateX(-90deg);
+}
+
+.page-header-logo {
+  height: 3em;
+}
+
+.page-header-icons {
+  flex: 1;
+
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  justify-content: flex-end;
+}
+
+.page-header-search {
+  padding: 0.25em;
+  box-sizing: border-box;
+}

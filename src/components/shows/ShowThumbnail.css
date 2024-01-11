@@ -1,0 +1,11 @@
+.show-thumbnail {
+  flex: 1;
+}
+
+.show-thumbnail:hover {
+  transform: scale(1.1);
+}
+
+.show-thumbnail-image {
+  height: 14em;
+}

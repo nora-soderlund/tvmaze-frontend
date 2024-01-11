@@ -1,0 +1,11 @@
+.page-container {
+
+}
+
+@media screen and (min-width: 1000px) {
+  .page-container {
+    width: 1000px;
+
+    margin: 0 auto;
+  }
+}
