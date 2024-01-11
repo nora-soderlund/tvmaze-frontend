@@ -49,109 +49,87 @@ describe("PageHeader", () => {
     expect(headerElement.classList.contains("page-header-transitioned")).toBeFalsy();
   });
 
-  test("Should get shows from TvmazeDataSource on dynamic input change", async () => {
-    const result = render(<PageHeader/>);
+  describe("Search changes", () => {
+    beforeEach(async () => {
+      const result = render(<PageHeader/>);
 
-    jest.spyOn(TvmazeDataSource.prototype, "getShowsByQuery").mockResolvedValueOnce([ TvInformationShowDetailsMock ]);
+      jest.spyOn(TvmazeDataSource.prototype, "getShowsByQuery").mockResolvedValueOnce([ TvInformationShowDetailsMock ]);
+  
+      const searchIconElement = screen.getByTestId("icon-magnifying-glass");
+      expect(searchIconElement).toBeInTheDocument();
+  
+      fireEvent.click(searchIconElement);
+  
+      const inputElement = screen.getByTestId("input");
+      expect(inputElement).toBeInTheDocument();
+  
+      await act(async () => {
+        jest.useFakeTimers();
+  
+        fireEvent.change(inputElement, {
+          target: {
+            value: "Example"
+          }
+        });
+  
+        jest.runAllTimers();
+      });
+  
+      await waitFor(() => expect(result.getByText("Search results")).toBeInTheDocument());
+    });
 
-    const searchIconElement = screen.getByTestId("icon-magnifying-glass");
-    expect(searchIconElement).toBeInTheDocument();
+    test("Should get shows from TvmazeDataSource on dynamic input change", async () => {
+      expect(TvmazeDataSource.prototype.getShowsByQuery).toHaveBeenCalledWith("Example", expect.any(AbortSignal));
+    });
 
-    fireEvent.click(searchIconElement);
-
-    const inputElement = screen.getByTestId("input");
-    expect(inputElement).toBeInTheDocument();
-
-    await act(async () => {
+    test("Should redirect to the show page on show thumbnail click", async () => {
+      const showThumbnailElement = screen.getByTestId("show-thumbnail");
+  
+      await act(async () => {
+        fireEvent.click(showThumbnailElement);
+      });
+  
+      expect(redirect).toHaveBeenCalledWith(`/shows/${TvInformationShowDetailsMock.id}`);
+    });
+    
+    test("Should cancel long-running requests on new requests", async () => {
+      const result = render(<PageHeader/>);
+  
       jest.useFakeTimers();
-
-      fireEvent.change(inputElement, {
-        target: {
-          value: "Example"
-        }
+      jest.spyOn(AbortController.prototype, "abort");
+      jest.spyOn(TvmazeDataSource.prototype, "getShowsByQuery").mockReturnValue(new Promise(() => {}));
+  
+      const searchIconElement = screen.getByTestId("icon-magnifying-glass");
+      expect(searchIconElement).toBeInTheDocument();
+  
+      fireEvent.click(searchIconElement);
+  
+      const inputElement = screen.getByTestId("input");
+      expect(inputElement).toBeInTheDocument();
+  
+      await act(async () => {
+        fireEvent.change(inputElement, {
+          target: {
+            value: "Example"
+          }
+        });
+  
+        jest.runAllTimers();
       });
-
-      jest.runAllTimers();
-    });
-
-    await waitFor(() => expect(result.getByText("Search results")).toBeInTheDocument());
-
-    expect(TvmazeDataSource.prototype.getShowsByQuery).toHaveBeenCalledWith("Example", expect.any(AbortSignal));
-  });
-
-  test("Should cancel long-running requests on new requests", async () => {
-    const result = render(<PageHeader/>);
-
-    jest.useFakeTimers();
-    jest.spyOn(AbortController.prototype, "abort");
-    jest.spyOn(TvmazeDataSource.prototype, "getShowsByQuery").mockReturnValue(new Promise(() => {}));
-
-    const searchIconElement = screen.getByTestId("icon-magnifying-glass");
-    expect(searchIconElement).toBeInTheDocument();
-
-    fireEvent.click(searchIconElement);
-
-    const inputElement = screen.getByTestId("input");
-    expect(inputElement).toBeInTheDocument();
-
-    await act(async () => {
-      fireEvent.change(inputElement, {
-        target: {
-          value: "Example"
-        }
+  
+      await waitFor(() => expect(result.getByTestId("loading")).toBeInTheDocument());
+  
+      await act(async () => {
+        fireEvent.change(inputElement, {
+          target: {
+            value: "Example 2"
+          }
+        });
+  
+        jest.runAllTimers();
       });
-
-      jest.runAllTimers();
+  
+      expect(AbortController.prototype.abort).toHaveBeenCalledTimes(1);
     });
-
-    await waitFor(() => expect(result.getByTestId("loading")).toBeInTheDocument());
-
-    await act(async () => {
-      fireEvent.change(inputElement, {
-        target: {
-          value: "Example 2"
-        }
-      });
-
-      jest.runAllTimers();
-    });
-
-    expect(AbortController.prototype.abort).toHaveBeenCalledTimes(1);
-  });
-
-  test("Should redirect to the show page on show thumbnail click", async () => {
-    const result = render(<PageHeader/>);
-
-    jest.spyOn(TvmazeDataSource.prototype, "getShowsByQuery").mockResolvedValueOnce([ TvInformationShowDetailsMock ]);
-
-    const searchIconElement = screen.getByTestId("icon-magnifying-glass");
-    expect(searchIconElement).toBeInTheDocument();
-
-    fireEvent.click(searchIconElement);
-
-    const inputElement = screen.getByTestId("input");
-    expect(inputElement).toBeInTheDocument();
-
-    await act(async () => {
-      jest.useFakeTimers();
-
-      fireEvent.change(inputElement, {
-        target: {
-          value: "Example"
-        }
-      });
-
-      jest.runAllTimers();
-    });
-
-    await waitFor(() => expect(result.getByTestId("show-thumbnail")).toBeInTheDocument());
-
-    const showThumbnailElement = result.getByTestId("show-thumbnail");
-
-    await act(async () => {
-      fireEvent.click(showThumbnailElement);
-    });
-
-    expect(redirect).toHaveBeenCalledWith(`/shows/${TvInformationShowDetailsMock.id}`);
   });
 });
