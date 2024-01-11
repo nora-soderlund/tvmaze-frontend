@@ -91,45 +91,45 @@ describe("PageHeader", () => {
   
       expect(redirect).toHaveBeenCalledWith(`/shows/${TvInformationShowDetailsMock.id}`);
     });
-    
-    test("Should cancel long-running requests on new requests", async () => {
-      const result = render(<PageHeader/>);
-  
-      jest.useFakeTimers();
-      jest.spyOn(AbortController.prototype, "abort");
-      jest.spyOn(TvmazeDataSource.prototype, "getShowsByQuery").mockReturnValue(new Promise(() => {}));
-  
-      const searchIconElement = screen.getByTestId("icon-magnifying-glass");
-      expect(searchIconElement).toBeInTheDocument();
-  
-      fireEvent.click(searchIconElement);
-  
-      const inputElement = screen.getByTestId("input");
-      expect(inputElement).toBeInTheDocument();
-  
-      await act(async () => {
-        fireEvent.change(inputElement, {
-          target: {
-            value: "Example"
-          }
-        });
-  
-        jest.runAllTimers();
+  });
+
+  test("Should cancel long-running requests on new requests", async () => {
+    const result = render(<PageHeader/>);
+
+    jest.useFakeTimers();
+    jest.spyOn(AbortController.prototype, "abort");
+    jest.spyOn(TvmazeDataSource.prototype, "getShowsByQuery").mockReturnValue(new Promise(() => {}));
+
+    const searchIconElement = screen.getByTestId("icon-magnifying-glass");
+    expect(searchIconElement).toBeInTheDocument();
+
+    fireEvent.click(searchIconElement);
+
+    const inputElement = screen.getByTestId("input");
+    expect(inputElement).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.change(inputElement, {
+        target: {
+          value: "Example"
+        }
       });
-  
-      await waitFor(() => expect(result.getByTestId("loading")).toBeInTheDocument());
-  
-      await act(async () => {
-        fireEvent.change(inputElement, {
-          target: {
-            value: "Example 2"
-          }
-        });
-  
-        jest.runAllTimers();
-      });
-  
-      expect(AbortController.prototype.abort).toHaveBeenCalledTimes(1);
+
+      jest.runAllTimers();
     });
+
+    await waitFor(() => expect(result.getByTestId("loading")).toBeInTheDocument());
+
+    await act(async () => {
+      fireEvent.change(inputElement, {
+        target: {
+          value: "Example 2"
+        }
+      });
+
+      jest.runAllTimers();
+    });
+
+    expect(AbortController.prototype.abort).toHaveBeenCalledTimes(1);
   });
 });
