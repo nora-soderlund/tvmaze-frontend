@@ -22,6 +22,7 @@ export default function PageHeader({ children }: PageHeaderProps) {
   const [ searchQuery, setSearchQuery ] = useState<string | null>(null);
   const [ searchResults, setSearchResults ] = useState<TvInformationShow[] | null>(null);
   const [ searchAbortController, setSearchAbortController ] = useState<AbortController | null>(null);
+  const [ searchError, setSearchError ] = useState<string | null>(null);
 
   useEffect(() => {
     if(searchQuery) {
@@ -37,9 +38,10 @@ export default function PageHeader({ children }: PageHeaderProps) {
         setSearchResults(shows.filter((show) => show.image));
         setSearchAbortController(null);
       }).catch((reason) => {
-        console.warn("Failed to find shows by query, simulating an empty search result.", { reason });
+        console.warn("Failed to find shows by query.", { reason });
 
-        setSearchResults([]);
+        setSearchError("Failed to query for shows from the TV maze API.");
+
         setSearchAbortController(null);
       });
     }
@@ -96,21 +98,29 @@ export default function PageHeader({ children }: PageHeaderProps) {
         {(searchVisible) && (
           <Fragment>
             {(!searchAbortController)?(
-              <Fragment>
-                <h2>Search results</h2>
+              (searchError)?(
+                <Fragment>
+                  <h2>Something went wrong!</h2>
 
-                {(searchResults?.length)?(
-                  <div className="page-header-search-result">
-                    {searchResults.map((show) => (
-                      <a key={show.id} href={`/shows/${show.id}`}>
-                        <ShowThumbnail show={show} data-testid="show-thumbnail"/>
-                      </a>
-                    ))}
-                  </div>
-                ):(
-                  <p>No result founds.</p>
-                )}
-              </Fragment>
+                  <p>{searchError}</p>
+                </Fragment>
+              ):(
+                <Fragment>
+                  <h2>Search results</h2>
+
+                  {(searchResults?.length)?(
+                    <div className="page-header-search-result">
+                      {searchResults.map((show) => (
+                        <a key={show.id} href={`/shows/${show.id}`}>
+                          <ShowThumbnail show={show} data-testid="show-thumbnail"/>
+                        </a>
+                      ))}
+                    </div>
+                  ):(
+                    <p>No result founds.</p>
+                  )}
+                </Fragment>
+              )
             ):(
               (searchAbortController) && (
                 <Fragment>

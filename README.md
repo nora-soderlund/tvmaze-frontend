@@ -1,9 +1,14 @@
 # tvmaze-frontend
 
+Live demo @ https://tvmaze-frontend.pages.dev/
+
 ## Getting started
 
 1. `npm install`
 2. `npm start`
+
+### Running tests w/ coverage
+`npm test`
 
 ## "Journey"
 
@@ -19,4 +24,4 @@ With more time on my hands, I would've:
 - Placed the featured show logic in a backend.
 - Added more show information to the /shows/{showId} page.
 - Added a proper manifest and document metadata.
-- Finished adding around 100% test coverage.
+- Finished adding around 100% test coverage, or at least exhaustive unit tests.
