@@ -1,6 +1,6 @@
 # tvmaze-frontend
 
-Live demo @ https://tvmaze-frontend.pages.dev/
+Live demo @ https://e2cb9a26.tvmaze-frontend.pages.dev
 
 ## Getting started
 
