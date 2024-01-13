@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import PageHeader from "../../components/page/PageHeader";
-import TvInformationShowDetailsMock from "../data/interfaces/TvInformationShowDetails.mock.json";
+import TvInformationShowMock from "../data/interfaces/TvInformationShow.mock.json";
 import TvmazeDataSource from "../../data/tvinformation/sources/tvmaze/TvmazeDataSource";
 import { act } from "react-dom/test-utils";
 import { redirect } from "react-router-dom";
@@ -47,7 +47,7 @@ describe("PageHeader", () => {
     beforeEach(async () => {
       const result = render(<PageHeader/>);
 
-      jest.spyOn(TvmazeDataSource.prototype, "getShowsByQuery").mockResolvedValueOnce([ TvInformationShowDetailsMock ]);
+      jest.spyOn(TvmazeDataSource.prototype, "getShowsByQuery").mockResolvedValueOnce([ TvInformationShowMock ]);
   
       const searchIconElement = screen.getByTestId("icon-magnifying-glass");
       expect(searchIconElement).toBeInTheDocument();
@@ -83,7 +83,7 @@ describe("PageHeader", () => {
         fireEvent.click(showThumbnailElement);
       });
   
-      expect(redirect).toHaveBeenCalledWith(`/shows/${TvInformationShowDetailsMock.id}`);
+      expect(redirect).toHaveBeenCalledWith(`/shows/${TvInformationShowMock.id}`);
     });
   });
 

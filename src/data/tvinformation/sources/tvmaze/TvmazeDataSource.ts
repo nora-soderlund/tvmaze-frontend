@@ -1,6 +1,6 @@
 import TvInformationDataSource from "../../interfaces/TvInformationDataSource";
 import TvInformationError from "../../interfaces/TvInformationError";
-import TvInformationShowDetails from "../../interfaces/TvInformationShowDetails";
+import TvInformationShow from "../../interfaces/TvInformationShow";
 import { SearchResult, Show } from "./interfaces/TvmazeSearchResult";
 
 export default class TvmazeDataSource implements TvInformationDataSource {
@@ -11,25 +11,25 @@ export default class TvmazeDataSource implements TvInformationDataSource {
   /**
    * Fetches the show details from the TVMAZE API via a TVMAZE show id.
    */
-  public async getShow(showId: number, abortSignal?: AbortSignal): Promise<TvInformationShowDetails> {
+  public async getShow(showId: number, abortSignal?: AbortSignal): Promise<TvInformationShow> {
     const url = new URL(`/shows/${showId}`, this.baseUrl);
 
     const result = await this.getRequest<Show>(url, abortSignal);
 
-    return this.getMappedShowDetails(result);
+    return this.getMappedShow(result);
   }
 
   /**
    * Fetches a list of shows by the query from the TVMAZE API.
    */
-  public async getShowsByQuery(query: string, abortSignal?: AbortSignal): Promise<TvInformationShowDetails[]> {
+  public async getShowsByQuery(query: string, abortSignal?: AbortSignal): Promise<TvInformationShow[]> {
     const url = new URL("/search/shows", this.baseUrl);
 
     url.searchParams.set("q", query);
 
     const result = await this.getRequest<SearchResult>(url, abortSignal);
 
-    return result.map(({ show }) => this.getMappedShowDetails(show));
+    return result.map(({ show }) => this.getMappedShow(show));
   }
 
   private async getRequest<Result>(url: URL, abortSignal?: AbortSignal): Promise<Result> {  
@@ -50,7 +50,7 @@ export default class TvmazeDataSource implements TvInformationDataSource {
     return JSON.parse(body);
   }
 
-  private getMappedShowDetails(result: Show): TvInformationShowDetails {
+  private getMappedShow(result: Show): TvInformationShow {
     return {
       id: result.id,
       url: result.url,

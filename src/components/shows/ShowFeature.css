@@ -45,6 +45,8 @@
   gap: 1em;
 
   color: var(--brand-color);
+
+  overflow-x: scroll;
 }
 
 .show-feature-genres li:not(:last-child) {
@@ -54,4 +56,6 @@
 
 .show-feature-button {
   margin-left: auto;
+
+  white-space: nowrap;
 }

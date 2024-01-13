@@ -1,8 +1,10 @@
 .genre-shows {
   display: flex;
+
   flex-direction: row;
-  flex-wrap: nowrap;
+
   gap: 1em;
 
   overflow-x: scroll;
+  overflow-y: hidden;
 }

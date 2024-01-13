@@ -1,5 +1,7 @@
 .show-thumbnail {
-  flex: 1;
+  display: inline-block;
+
+  cursor: pointer;
 }
 
 .show-thumbnail:hover {

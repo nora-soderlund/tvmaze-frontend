@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import IndexPage from "../../../components/routes/IndexPage";
 import TvmazeDataSource from "../../../data/tvinformation/sources/tvmaze/TvmazeDataSource";
-import TvInformationShowDetailsMock from "../../data/interfaces/TvInformationShowDetails.mock.json";
+import TvInformationShowMock from "../../data/interfaces/TvInformationShow.mock.json";
 
 describe("IndexPage", () => {
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe("IndexPage", () => {
   });
 
   test("Should show a page wallpaper if the feature show has an image", async () => {
-    jest.spyOn(TvmazeDataSource.prototype, "getShow").mockResolvedValue(TvInformationShowDetailsMock);
+    jest.spyOn(TvmazeDataSource.prototype, "getShow").mockResolvedValue(TvInformationShowMock);
 
     render(<IndexPage/>);
 

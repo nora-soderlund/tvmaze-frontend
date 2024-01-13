@@ -7,10 +7,9 @@ import IconButton from "../form/IconButton";
 import { Fragment, ReactNode, useCallback, useEffect, useState } from "react";
 import Input from "../form/Input";
 import { tvmazeDataSource } from "../../data/tvinformation";
-import TvInformationShowDetails from "../../data/tvinformation/interfaces/TvInformationShowDetails";
+import TvInformationShow from "../../data/tvinformation/interfaces/TvInformationShow";
 import useDynamicChange from "../../hooks/useDynamicChange";
 import ShowThumbnail from "../shows/ShowThumbnail";
-import { redirect } from "react-router-dom";
 import LoadingDots from "../LoadingDots";
 import Button from "../form/Button";
 
@@ -21,7 +20,7 @@ type PageHeaderProps = {
 export default function PageHeader({ children }: PageHeaderProps) {
   const [ searchVisible, setSearchVisible ] = useState(false);
   const [ searchQuery, setSearchQuery ] = useState<string | null>(null);
-  const [ searchResults, setSearchResults ] = useState<TvInformationShowDetails[] | null>(null);
+  const [ searchResults, setSearchResults ] = useState<TvInformationShow[] | null>(null);
   const [ searchAbortController, setSearchAbortController ] = useState<AbortController | null>(null);
 
   useEffect(() => {
@@ -35,7 +34,7 @@ export default function PageHeader({ children }: PageHeaderProps) {
       setSearchAbortController(abortController);
 
       tvmazeDataSource.getShowsByQuery(searchQuery, abortController.signal).then((shows) => {
-        setSearchResults(shows);
+        setSearchResults(shows.filter((show) => show.image));
         setSearchAbortController(null);
       }).catch((reason) => {
         console.warn("Failed to find shows by query, simulating an empty search result.", { reason });
@@ -105,8 +104,10 @@ export default function PageHeader({ children }: PageHeaderProps) {
                     flexWrap: "wrap",
                     gap: "1em"
                   }}>
-                    {searchResults.map((showDetails) => (
-                      <ShowThumbnail key={showDetails.id} showDetails={showDetails} onClick={() => redirect(`/shows/${showDetails.id}`)} data-testid="show-thumbnail"/>
+                    {searchResults.map((show) => (
+                      <a href={`/shows/${show.id}`}>
+                        <ShowThumbnail key={show.id} show={show} data-testid="show-thumbnail"/>
+                      </a>
                     ))}
                   </div>
                 ):(

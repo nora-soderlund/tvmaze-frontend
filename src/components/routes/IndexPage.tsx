@@ -1,47 +1,58 @@
-import { useParams } from "react-router-dom";
 import Page from "../page/Page";
 import PageWallpaper from "../page/PageWallpaper";
 import PageHeader from "../page/PageHeader";
 import { Fragment, useCallback, useEffect, useState } from "react";
-import TvInformationShowDetails from "../../data/tvinformation/interfaces/TvInformationShowDetails";
+import TvInformationShow from "../../data/tvinformation/interfaces/TvInformationShow";
 import { tvmazeDataSource } from "../../data/tvinformation";
 import ShowFeature from "../shows/ShowFeature";
-import PageMain from "../page/PageMain";
 import PageContainer from "../page/PageContainer";
 import ShowThumbnail from "../shows/ShowThumbnail";
 import "./IndexPage.css";
+import PageFooter from "../page/PageFooter";
 
-const showsToFeature = [ 5, /*6, 9*/ ];
-const genresToFeature = [ "Action", "Comedy", "Drama" ];
+const genresToFeature = [
+  {
+    title: "Coming soon",
+    showIds: [ 5, 11447, 6, 6738, 9, 62323 ]
+  },
 
-type GenreShowDetails = {
-  genre: string;
-  shows: TvInformationShowDetails[];
+  {
+    title: "Action shows",
+    showIds: [ 32, 43031, 15299, 46562, 41414, 35158 ]
+  },
+
+  {
+    title: "Comedy shows",
+    showIds: [ 32938, 53647, 36947, 20263, 107, 83 ]
+  }
+];
+
+type GenreShow = {
+  title: string;
+  shows: TvInformationShow[];
 };
 
 export default function IndexPage() {
-  const [ featuredShowDetails, setFeaturedShowDetails ] = useState<TvInformationShowDetails | null>(null);
-  const [ genreShowDetails, setGenreShowDetails ] = useState<GenreShowDetails[] | null>(null);
+  const [ featuredShow, setFeaturedShow ] = useState<TvInformationShow | null>(null);
+  const [ genreShow, setGenreShow ] = useState<GenreShow[] | null>(null);
 
   useEffect(() => {
-    const showId = showsToFeature[Math.floor(Math.random() * showsToFeature.length)];
-
-    tvmazeDataSource.getShow(showId).then((showDetails) => {
-      setFeaturedShowDetails(showDetails);
+    tvmazeDataSource.getShow(5).then((show) => {
+      setFeaturedShow(show);
     });
 
     Promise.all(genresToFeature.map(async (genre) => {
       return {
-        genre,
-        shows: await tvmazeDataSource.getShowsByQuery(genre)
+        title: genre.title,
+        shows: await Promise.all(genre.showIds.map((showId) => tvmazeDataSource.getShow(showId)))
       };
     })).then((results) => {
-      setGenreShowDetails(results);
+      setGenreShow(results);
     });
   }, []);
 
-  const handleShowThumbnailClick = useCallback((showDetails: TvInformationShowDetails) => {
-    setFeaturedShowDetails(showDetails);
+  const handleShowThumbnailClick = useCallback((show: TvInformationShow) => {
+    setFeaturedShow(show);
 
     window.scrollTo({
       top: 0,
@@ -51,26 +62,26 @@ export default function IndexPage() {
 
   return (
     <Page>
-      {(featuredShowDetails?.image) && (
-        <PageWallpaper image={featuredShowDetails.image} data-testid="page-wallpaper"/>
+      {(featuredShow?.image) && (
+        <PageWallpaper image={featuredShow.image} data-testid="page-wallpaper"/>
       )}
 
       <PageHeader>
-        {(featuredShowDetails) && (
-          <ShowFeature showDetails={featuredShowDetails} data-testid="show-feature"/>
+        {(featuredShow) && (
+          <ShowFeature show={featuredShow} data-testid="show-feature"/>
         )}
 
         <PageContainer>
-          {(genreShowDetails)?(
-            genreShowDetails.map(({ genre, shows }) => (
-              <Fragment key={genre}>
+          {(genreShow)?(
+            genreShow.map(({ title, shows }) => (
+              <Fragment key={title}>
                 <hr/>
                 
-                <h2>{genre} shows</h2>
+                <h2>{title}</h2>
 
                 <div className="genre-shows">
-                  {shows.filter((showDetails) => showDetails.image?.length).map((showDetails) => (
-                    <ShowThumbnail key={showDetails.id} showDetails={showDetails} onClick={() => handleShowThumbnailClick(showDetails)}/>
+                  {shows.filter((show) => show.image?.length).map((show) => (
+                    <ShowThumbnail key={show.id} show={show} onClick={() => handleShowThumbnailClick(show)}/>
                   ))}
                 </div>
               </Fragment>
@@ -79,6 +90,8 @@ export default function IndexPage() {
             <div/>
           )}
         </PageContainer>
+
+        <PageFooter/>
       </PageHeader>
     </Page>
   );

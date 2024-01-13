@@ -1,4 +1,4 @@
-export default interface TvInformationShowDetails {
+export default interface TvInformationShow {
   id: number;
   url: string;
   name: string;

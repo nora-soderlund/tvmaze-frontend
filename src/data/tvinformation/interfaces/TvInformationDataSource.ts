@@ -1,6 +1,6 @@
-import TvInformationShowDetails from "./TvInformationShowDetails";
+import TvInformationShow from "./TvInformationShow";
 
 export default interface TvInformationDataSource {
-  getShow(showId: number, abortSignal?: AbortSignal): Promise<TvInformationShowDetails>;
-  getShowsByQuery(query: string, abortSignal?: AbortSignal): Promise<TvInformationShowDetails[]>;
+  getShow(showId: number, abortSignal?: AbortSignal): Promise<TvInformationShow>;
+  getShowsByQuery(query: string, abortSignal?: AbortSignal): Promise<TvInformationShow[]>;
 }

@@ -1,7 +1,7 @@
 import TvInformationError from "../../../data/tvinformation/interfaces/TvInformationError";
 import TvmazeDataSource from "../../../data/tvinformation/sources/tvmaze/TvmazeDataSource";
 import TvmazeSearchResultMock from "../../../data/tvinformation/sources/tvmaze/interfaces/TvmazeSearchResult.mock.json";
-import TvInformationShowDetailsMock from "../interfaces/TvInformationShowDetails.mock.json";
+import TvInformationShowMock from "../interfaces/TvInformationShow.mock.json";
 
 export function mockFetchResponse(ok: boolean, body: unknown) {
   jest.spyOn(globalThis, "fetch").mockResolvedValueOnce({
@@ -57,13 +57,13 @@ describe("TvmazeDataSource", () => {
     });
   });
 
-  describe("getMappedShowDetails", () => {
-    test("Should return a mapped TvInformationShowDetails object from Show", async () => {
+  describe("getMappedShow", () => {
+    test("Should return a mapped TvInformationShow object from Show", async () => {
       mockFetchResponse(true, TvmazeSearchResultMock[0].show);
 
       const result = await tvmazeDataSource.getShow(0, abortSignal);
 
-      expect(result).toStrictEqual(TvInformationShowDetailsMock);
+      expect(result).toStrictEqual(TvInformationShowMock);
     });
   });
 });
