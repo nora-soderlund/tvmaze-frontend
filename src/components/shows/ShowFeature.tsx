@@ -5,11 +5,12 @@ import "./ShowFeature.css";
 
 type ShowFeatureProps = {
   showDetails: TvInformationShowDetails;
+  "data-testid"?: string;
 }
 
-export default function ShowFeature({ showDetails }: ShowFeatureProps) {
+export default function ShowFeature({ showDetails, "data-testid": dataTestId }: ShowFeatureProps) {
   return (
-    <PageContainer>
+    <PageContainer data-testid={dataTestId}>
       <h3 className="show-feature-tag">Featured show</h3>
       
       <div className="show-feature">

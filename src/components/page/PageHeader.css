@@ -1,3 +1,13 @@
+@keyframes delay-animation {
+  from {
+    visibility: none;
+  }
+
+  to {
+    visibility: visible;
+  }
+}
+
 .page-header-section {
   height: 3em;
 
@@ -38,4 +48,10 @@
 .page-header-search {
   padding: 0.25em;
   box-sizing: border-box;
+}
+
+.page-header-search-slow-client {
+  visibility: hidden;
+
+  animation: delay-animation 0s 5s forwards;
 }

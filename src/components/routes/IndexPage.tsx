@@ -52,12 +52,12 @@ export default function IndexPage() {
   return (
     <Page>
       {(featuredShowDetails?.image) && (
-        <PageWallpaper image={featuredShowDetails.image}/>
+        <PageWallpaper image={featuredShowDetails.image} data-testid="page-wallpaper"/>
       )}
 
       <PageHeader>
         {(featuredShowDetails) && (
-          <ShowFeature showDetails={featuredShowDetails}/>
+          <ShowFeature showDetails={featuredShowDetails} data-testid="show-feature"/>
         )}
 
         <PageContainer>

@@ -4,11 +4,12 @@ import "./PageContainer.css";
 
 type PageContainerProps = {
   children: ReactNode;
+  "data-testid"?: string;
 }
 
-export default function PageContainer({ children }: PageContainerProps) {
+export default function PageContainer({ children, "data-testid": dataTestId }: PageContainerProps) {
   return (
-    <div className="page-container">
+    <div className="page-container" data-testid={dataTestId}>
       {children}
     </div>
   );

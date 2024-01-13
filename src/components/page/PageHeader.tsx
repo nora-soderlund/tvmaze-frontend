@@ -4,13 +4,15 @@ import PageContainer from "./PageContainer";
 import "./PageHeader.css";
 import { faMagnifyingGlass, faTimes } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "../form/IconButton";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { Fragment, ReactNode, useCallback, useEffect, useState } from "react";
 import Input from "../form/Input";
 import { tvmazeDataSource } from "../../data/tvinformation";
 import TvInformationShowDetails from "../../data/tvinformation/interfaces/TvInformationShowDetails";
 import useDynamicChange from "../../hooks/useDynamicChange";
 import ShowThumbnail from "../shows/ShowThumbnail";
 import { redirect } from "react-router-dom";
+import LoadingDots from "../LoadingDots";
+import Button from "../form/Button";
 
 type PageHeaderProps = {
   children?: ReactNode;
@@ -34,9 +36,33 @@ export default function PageHeader({ children }: PageHeaderProps) {
 
       tvmazeDataSource.getShowsByQuery(searchQuery, abortController.signal).then((shows) => {
         setSearchResults(shows);
+        setSearchAbortController(null);
+      }).catch((reason) => {
+        console.warn("Failed to find shows by query, simulating an empty search result.", { reason });
+
+        setSearchResults([]);
+        setSearchAbortController(null);
       });
     }
   }, [ searchQuery ]);
+
+  const handleCancelSearch = useCallback(() => {
+    if(!searchAbortController) {
+      console.info("There is no active search to cancel.");
+
+      return;
+    }
+
+    searchAbortController.abort();
+  }, [ searchAbortController ]);
+
+  const handleToggleSearch = useCallback(() => {
+    if(searchVisible) {
+      handleCancelSearch();
+    }
+
+    setSearchVisible(!searchVisible);
+  }, [ searchVisible, handleCancelSearch ]);
 
   return (
     <Fragment>
@@ -48,7 +74,7 @@ export default function PageHeader({ children }: PageHeaderProps) {
             </a>
 
             <div className="page-header-icons">
-              <IconButton data-testid="icon-magnifying-glass" onClick={() => setSearchVisible(!searchVisible)}>
+              <IconButton data-testid="icon-magnifying-glass" onClick={handleToggleSearch}>
                 <FontAwesomeIcon icon={faMagnifyingGlass} fontSize={"2em"}/>
               </IconButton>
             </div>
@@ -59,38 +85,52 @@ export default function PageHeader({ children }: PageHeaderProps) {
 
             <Input placeholder="Search for a show..." onChange={useDynamicChange((event) => setSearchQuery((event.target as HTMLInputElement).value))} data-testid="input"/>
 
-            <IconButton data-testid="icon-times" onClick={() => setSearchVisible(!searchVisible)}>
+            <IconButton data-testid="icon-times" onClick={handleToggleSearch}>
               <FontAwesomeIcon icon={faTimes} fontSize={"2em"}/>
             </IconButton>
           </div>
         </header>
 
         {(searchVisible) && (
-          (searchResults !== null)?(
-            <Fragment>
-              <h2>Search results</h2>
+          <Fragment>
+            {(!searchAbortController)?(
+              <Fragment>
+                <h2>Search results</h2>
 
-              <div style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                gap: "1em"
-              }}>
-                {searchResults.map((showDetails) => (
-                  <ShowThumbnail key={showDetails.id} showDetails={showDetails} onClick={() => redirect(`/shows/${showDetails.id}`)} data-testid="show-thumbnail"/>
-                ))}
-              </div>
-            </Fragment>
-          ):(
-            (searchAbortController) && (
-              <h2 data-testid="loading">Loading</h2>
-            )
-          )
+                {(searchResults?.length)?(
+                  <div style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    gap: "1em"
+                  }}>
+                    {searchResults.map((showDetails) => (
+                      <ShowThumbnail key={showDetails.id} showDetails={showDetails} onClick={() => redirect(`/shows/${showDetails.id}`)} data-testid="show-thumbnail"/>
+                    ))}
+                  </div>
+                ):(
+                  <p>No result founds.</p>
+                )}
+              </Fragment>
+            ):(
+              (searchAbortController) && (
+                <Fragment>
+                  <LoadingDots/>
+
+                  <div className="page-header-search-slow-client">
+                    <p>Your search is taking longer than expected, this can be due to a slow internet connection.</p>
+
+                    <Button onClick={handleCancelSearch}>Cancel search</Button>
+                  </div>
+                </Fragment>
+              )
+            )}
+          </Fragment>
         )}
       </PageContainer>
 
-      {(!searchVisible || !searchResults) && (
+      {(!searchVisible) && (
         children
       )}
     </Fragment>
