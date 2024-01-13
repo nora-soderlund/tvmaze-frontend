@@ -1,5 +1,4 @@
-import { Fragment, ReactNode } from "react"
-import PageHeader from "./PageHeader";
+import { ReactNode } from "react"
 
 import "./Page.css";
 

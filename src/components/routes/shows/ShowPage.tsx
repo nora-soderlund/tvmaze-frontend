@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useState } from "react";
-import { redirect, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { tvInformationDataSource } from "../../../data/tvinformation";
 import TvInformationShow from "../../../data/tvinformation/interfaces/TvInformationShow";
 import Page from "../../page/Page";

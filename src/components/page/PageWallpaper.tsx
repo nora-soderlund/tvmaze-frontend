@@ -1,11 +1,11 @@
 import "./PageWallpaper.css";
 
-type PageWallpaper = {
+type PageWallpaperProps = {
   image: string;
   "data-testid"?: string;
 };
 
-export default function PageWallpaper({ image, "data-testid": dataTestId }: PageWallpaper) {
+export default function PageWallpaper({ image, "data-testid": dataTestId }: PageWallpaperProps) {
   return (
     <div className="page-wallpaper" data-testid={dataTestId}>
       <div className="page-wallpaper-filter" style={{

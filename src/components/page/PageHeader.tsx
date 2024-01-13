@@ -43,6 +43,9 @@ export default function PageHeader({ children }: PageHeaderProps) {
         setSearchAbortController(null);
       });
     }
+
+    // searchAbortController is correctly not added as a dependency
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ searchQuery ]);
 
   const handleCancelSearch = useCallback(() => {
