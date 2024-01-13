@@ -55,3 +55,11 @@
 
   animation: delay-animation 0s 5s forwards;
 }
+
+.page-header-search-result {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1em;
+}

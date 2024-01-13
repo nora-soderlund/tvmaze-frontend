@@ -82,7 +82,7 @@ export default function PageHeader({ children }: PageHeaderProps) {
           <div className="page-header-section page-header-search">
             <FontAwesomeIcon icon={faMagnifyingGlass} fontSize={"1.5em"}/>
 
-            <Input placeholder="Search for a show..." onChange={useDynamicChange((event) => setSearchQuery((event.target as HTMLInputElement).value))} data-testid="input"/>
+            <Input placeholder="Search for a show..." onChange={useDynamicChange((event) => event && setSearchQuery((event.target as HTMLInputElement).value))} data-testid="input"/>
 
             <IconButton data-testid="icon-times" onClick={handleToggleSearch}>
               <FontAwesomeIcon icon={faTimes} fontSize={"2em"}/>
@@ -97,16 +97,10 @@ export default function PageHeader({ children }: PageHeaderProps) {
                 <h2>Search results</h2>
 
                 {(searchResults?.length)?(
-                  <div style={{
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    gap: "1em"
-                  }}>
+                  <div className="page-header-search-result">
                     {searchResults.map((show) => (
-                      <a href={`/shows/${show.id}`}>
-                        <ShowThumbnail key={show.id} show={show} data-testid="show-thumbnail"/>
+                      <a key={show.id} href={`/shows/${show.id}`}>
+                        <ShowThumbnail show={show} data-testid="show-thumbnail"/>
                       </a>
                     ))}
                   </div>
@@ -117,7 +111,7 @@ export default function PageHeader({ children }: PageHeaderProps) {
             ):(
               (searchAbortController) && (
                 <Fragment>
-                  <LoadingDots/>
+                  <LoadingDots data-testid="loading"/>
 
                   <div className="page-header-search-slow-client">
                     <p>Your search is taking longer than expected, this can be due to a slow internet connection.</p>

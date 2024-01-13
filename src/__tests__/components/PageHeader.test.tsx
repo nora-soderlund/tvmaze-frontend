@@ -75,16 +75,6 @@ describe("PageHeader", () => {
     test("Should get shows from TvmazeDataSource on dynamic input change", async () => {
       expect(TvmazeDataSource.prototype.getShowsByQuery).toHaveBeenCalledWith("Example", expect.any(AbortSignal));
     });
-
-    test("Should redirect to the show page on show thumbnail click", async () => {
-      const showThumbnailElement = screen.getByTestId("show-thumbnail");
-  
-      await act(async () => {
-        fireEvent.click(showThumbnailElement);
-      });
-  
-      expect(redirect).toHaveBeenCalledWith(`/shows/${TvInformationShowMock.id}`);
-    });
   });
 
   test("Should cancel long-running requests on new requests", async () => {

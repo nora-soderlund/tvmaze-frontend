@@ -3,7 +3,7 @@ import Button from "../form/Button";
 import PageContainer from "../page/PageContainer";
 import "./ShowFeature.css";
 
-type ShowFeatureProps = {
+export type ShowFeatureProps = {
   show: TvInformationShow;
   showFeatureInformation?: boolean;
   "data-testid"?: string;

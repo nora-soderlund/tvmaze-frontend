@@ -18,3 +18,5 @@ With more time on my hands, I would've:
 - Added Storybook for said components to make a better distinction between the user experience and the user interface.
 - Placed the featured show logic in a backend.
 - Added more show information to the /shows/{showId} page.
+- Added a proper manifest and document metadata.
+- Finished adding around 100% test coverage.

@@ -80,8 +80,8 @@ export default function IndexPage() {
                 <h2>{title}</h2>
 
                 <div className="genre-shows">
-                  {shows.filter((show) => show.image?.length).map((show) => (
-                    <ShowThumbnail key={show.id} show={show} onClick={() => handleShowThumbnailClick(show)}/>
+                  {shows.filter((show) => show.image?.length).map((show, index) => (
+                    <ShowThumbnail key={`${show.id}-${index}`} show={show} onClick={() => handleShowThumbnailClick(show)} data-testid="genre-show-thumbnail"/>
                   ))}
                 </div>
               </Fragment>
