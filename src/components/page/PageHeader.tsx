@@ -6,7 +6,7 @@ import { faMagnifyingGlass, faTimes } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "../form/IconButton";
 import { Fragment, ReactNode, useCallback, useEffect, useState } from "react";
 import Input from "../form/Input";
-import { tvmazeDataSource } from "../../data/tvinformation";
+import { tvInformationDataSource } from "../../data/tvinformation";
 import TvInformationShow from "../../data/tvinformation/interfaces/TvInformationShow";
 import useDynamicChange from "../../hooks/useDynamicChange";
 import ShowThumbnail from "../shows/ShowThumbnail";
@@ -33,7 +33,7 @@ export default function PageHeader({ children }: PageHeaderProps) {
 
       setSearchAbortController(abortController);
 
-      tvmazeDataSource.getShowsByQuery(searchQuery, abortController.signal).then((shows) => {
+      tvInformationDataSource.getShowsByQuery(searchQuery, abortController.signal).then((shows) => {
         setSearchResults(shows.filter((show) => show.image));
         setSearchAbortController(null);
       }).catch((reason) => {

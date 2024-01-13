@@ -3,7 +3,7 @@ import PageWallpaper from "../page/PageWallpaper";
 import PageHeader from "../page/PageHeader";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import TvInformationShow from "../../data/tvinformation/interfaces/TvInformationShow";
-import { tvmazeDataSource } from "../../data/tvinformation";
+import { tvInformationDataSource } from "../../data/tvinformation";
 import ShowFeature from "../shows/ShowFeature";
 import PageContainer from "../page/PageContainer";
 import ShowThumbnail from "../shows/ShowThumbnail";
@@ -37,14 +37,14 @@ export default function IndexPage() {
   const [ genreShow, setGenreShow ] = useState<GenreShow[] | null>(null);
 
   useEffect(() => {
-    tvmazeDataSource.getShow(5).then((show) => {
+    tvInformationDataSource.getShow(5).then((show) => {
       setFeaturedShow(show);
     });
 
     Promise.all(genresToFeature.map(async (genre) => {
       return {
         title: genre.title,
-        shows: await Promise.all(genre.showIds.map((showId) => tvmazeDataSource.getShow(showId)))
+        shows: await Promise.all(genre.showIds.map((showId) => tvInformationDataSource.getShow(showId)))
       };
     })).then((results) => {
       setGenreShow(results);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { redirect, useParams } from "react-router-dom";
-import { tvmazeDataSource } from "../../../data/tvinformation";
+import { tvInformationDataSource } from "../../../data/tvinformation";
 import TvInformationShow from "../../../data/tvinformation/interfaces/TvInformationShow";
 import Page from "../../page/Page";
 import PageWallpaper from "../../page/PageWallpaper";
@@ -35,7 +35,7 @@ export default function ShowPage() {
       return;
     }
 
-    tvmazeDataSource.getShow(parsedShowId).then((show) => {
+    tvInformationDataSource.getShow(parsedShowId).then((show) => {
       setShow(show);
     })
   }, [ showId ]);

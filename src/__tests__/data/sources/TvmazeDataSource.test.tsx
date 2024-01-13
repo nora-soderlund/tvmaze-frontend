@@ -11,11 +11,11 @@ export function mockFetchResponse(ok: boolean, body: unknown) {
 }
 
 describe("TvmazeDataSource", () => {
-  let tvmazeDataSource: TvmazeDataSource;
+  let tvInformationDataSource: TvmazeDataSource;
   let abortSignal: AbortSignal;
 
   beforeAll(() => {
-    tvmazeDataSource = new TvmazeDataSource("https://example.com");
+    tvInformationDataSource = new TvmazeDataSource("https://example.com");
     abortSignal = new AbortController().signal;
   });
   
@@ -27,7 +27,7 @@ describe("TvmazeDataSource", () => {
     test("Should send a GET request to /shows/{showId}", async () => {
       mockFetchResponse(true, TvmazeSearchResultMock[0].show);
 
-      await tvmazeDataSource.getShow(0, abortSignal);
+      await tvInformationDataSource.getShow(0, abortSignal);
 
       expect(globalThis.fetch).toHaveBeenCalledWith("https://example.com/shows/0", expect.objectContaining({
         method: "GET",
@@ -40,7 +40,7 @@ describe("TvmazeDataSource", () => {
     test("Should send a GET request to /search/shows?q={query}", async () => {
       mockFetchResponse(true, TvmazeSearchResultMock);
 
-      await tvmazeDataSource.getShowsByQuery("example", abortSignal);
+      await tvInformationDataSource.getShowsByQuery("example", abortSignal);
 
       expect(globalThis.fetch).toHaveBeenCalledWith("https://example.com/search/shows?q=example", expect.objectContaining({
         method: "GET",
@@ -53,7 +53,7 @@ describe("TvmazeDataSource", () => {
     test("Should throw TvInformationError on non-ok responses", async () => {
       mockFetchResponse(false, undefined);
 
-      expect(() => tvmazeDataSource.getShow(0, abortSignal)).rejects.toThrow(TvInformationError);
+      expect(() => tvInformationDataSource.getShow(0, abortSignal)).rejects.toThrow(TvInformationError);
     });
   });
 
@@ -61,7 +61,7 @@ describe("TvmazeDataSource", () => {
     test("Should return a mapped TvInformationShow object from Show", async () => {
       mockFetchResponse(true, TvmazeSearchResultMock[0].show);
 
-      const result = await tvmazeDataSource.getShow(0, abortSignal);
+      const result = await tvInformationDataSource.getShow(0, abortSignal);
 
       expect(result).toStrictEqual(TvInformationShowMock);
     });
